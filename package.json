@@ -1,0 +1,14 @@
+{
+  "name": "tmi",
+  "description": "Tribe Management Infrastructure",
+  "version": "0.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ashleygwilliams/my_package.git"
+  },
+  "license": "GNU",
+  "dependencies": {
+    "angular-schema-form": "^0.8.13"
+  }
+}
