@@ -1,14 +1,17 @@
 {
-  "name": "tmi",
-  "description": "Tribe Management Infrastructure",
+  "name": "mINImi",
+  "description": "",
   "version": "0.0.0",
-  "main": "index.js",
+  "main": "bootstrap.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ashleygwilliams/my_package.git"
+    "url": "https://github.com/scheepers/TMI.git"
   },
-  "license": "GNU",
+  "license": "GPL-3.0",
   "dependencies": {
-    "angular-schema-form": "^0.8.13"
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "json-schema-form-js": "0.0.2",
+    "mongodb": "^2.2.33"
   }
 }

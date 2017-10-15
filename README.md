@@ -1,2 +1,3 @@
-# TMI
-Tribe Management Infrastructure
+# mINImi
+
+minimal microservices implementation

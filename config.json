@@ -1,0 +1,17 @@
+{
+
+	"name": "example",
+	"port": 3000,
+
+	"schemata": {
+
+		"mongo-example": {
+			"adaptor": "MongoAdaptor",
+			"host": "localhost",
+			"port": 27017,
+			"pool": 1
+		}
+
+	}
+
+}
