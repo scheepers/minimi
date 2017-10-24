@@ -8,7 +8,7 @@ minimal microservice implementation
 1. NodeJS
 
 
-## Installation
+## Install
 
 In the root of minimi, run:
 ```
@@ -16,7 +16,32 @@ npm install
 ```
 
 
-## Running
+## Configure
+
+minimi exposes a microservice per JSON schema in the [schema folder](./schema) using [wrappers](./wrappers).
+You may change this behavior by specifying different Wrappers and controllers within [config.json](./config.json).
+
+```
+{
+
+	"name": "example minimi instance",
+	"port": 3000,
+
+	"schema": {
+
+		"schema-name": {
+			"wrapper": "MySchemaWrapper",
+			"host": "hostname",
+			"port": 27017
+		}
+
+	}
+
+}
+```
+
+
+## Start
 
 From the folder containing minimi, run:
 ```
@@ -24,21 +49,49 @@ node minimi
 ```
 
 
-## Testing
+## Request
 
-In a browser, visit:
+Make requests to schema at:
 ```
-http:/localhost:3000/schema-name
+http://localhost:3000/schema-name
 ```
 
-Where schema-name may be the name of any JSON schema within the schemata folder.
+Request methods are responded to with request data and parameters formatted as JSON:
+* GET, DELETE & Patch - request parameters encoded in the url.
+* POST and PUT - request body.
+* PATCH - both request parameters and body.
 
-## Configuration
+This is not particularly useful in itself, but the idea is to extend the JsonAdapter as per MongoWrapper.
 
-minimi will by default expose a RESTfull service per JSON schema dropped into the schemata folder using a RestAdapter, within the adaptor folder.
-You may change this behavior by specifying different Adaptors and controllers within config.json.
-You may drop your own Adaptors in the adaptors/custom folder.
 
-## Links
+## Extend
+
+[MongoWrapper](./wrappers/MongoWrapper.js) is an example of extending the [RestWrapper](./wrappers/RestWrapper.js).
+
+With a local MongoDB service running and an example [config.json](./config.json):
+```
+{
+
+	"name": "example",
+	"port": 3000,
+
+	"schema": {
+
+		"user": {
+			"wrapper": "MongoWrapper",
+			"host": "localhost",
+			"port": 27017
+		}
+
+	}
+
+}
+```
+
+Instances of user objects may be persisted, retrieved, updated and deleted within a store with the same name as the schema.
+TODO: Add validation
+
+
+## Reference
 
 http://json-schema.org/

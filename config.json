@@ -3,10 +3,10 @@
 	"name": "example",
 	"port": 3000,
 
-	"schemata": {
+	"schema": {
 
 		"user": {
-			"adaptor": "MongoAdaptor",
+			"wrapper": "MongoWrapper",
 			"host": "localhost",
 			"port": 27017
 		}

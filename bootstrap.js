@@ -22,7 +22,7 @@ class  Minimi extends EventEmitter {
 
     this.config = require('./config.json')
     this.router = express()
-    this.adaptors = {}
+    this.wrappers = {}
 
     this.loadSchemas()
     this.emit('strapping')
@@ -36,7 +36,7 @@ class  Minimi extends EventEmitter {
   loadSchemas(){
     var thisObject = this
 
-    fs.readdir('schemata',
+    fs.readdir('schema',
 
       (err, files) => {
         if (err) throw new Error(err)
@@ -45,14 +45,14 @@ class  Minimi extends EventEmitter {
 
           var
             name = path.basename(files[i], '.json'),
-            Adaptor = thisObject.config.schemata[name]
-              ? require('./adaptors/' + thisObject.config.schemata[name].adaptor)
-              : require('./adaptors/RESTAdaptor')
+            Wrapper = thisObject.config.schema[name]
+              ? require('./wrappers/' + thisObject.config.schema[name].wrapper)
+              : require('./wrappers/RESTWrapper')
 
           thisObject.connect(
-            Adaptor,
+            Wrapper,
             name,
-            require('./schemata/' + files[i])
+            require('./schema/' + files[i])
           )
         }
       }
@@ -65,16 +65,16 @@ class  Minimi extends EventEmitter {
    * @param  string schema name
    * @param  object schema object
    */
-  connect(Adaptor, name, schema) {
-    this.emit('connecting', this, Adaptor, name, schema)
+  connect(Wrapper, name, schema) {
+    this.emit('connecting', this, Wrapper, name, schema)
 
-    this.adaptors[name] = new Adaptor(
+    this.wrappers[name] = new Wrapper(
       this,
       name,
       schema
     )
 
-    this.emit('connected', this, this.adaptors[name], name, schema)
+    this.emit('connected', this, this.wrappers[name], name, schema)
   }
 
   /**
