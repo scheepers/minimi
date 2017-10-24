@@ -87,6 +87,12 @@ With a local MongoDB service running and an example [config.json](./config.json)
 ```
 
 Instances of user objects may be persisted, retrieved, updated and deleted within a store with the same name as the schema.
+
+Visit:
+``` http://localhost:3000/user
+```
+to view a form generated from the schema.
+
 TODO: Add validation
 
 
