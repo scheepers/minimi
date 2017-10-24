@@ -5,11 +5,10 @@
 
 	"schemata": {
 
-		"mongo-example": {
+		"user": {
 			"adaptor": "MongoAdaptor",
 			"host": "localhost",
-			"port": 27017,
-			"pool": 1
+			"port": 27017
 		}
 
 	}

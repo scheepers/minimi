@@ -1,5 +1,5 @@
 /**
- * @file bootstrap.js
+ * @file minimi.js
  * Contains service bootstrapping code.
  */
 
@@ -8,20 +8,26 @@
 const
   express = require('express'),
   fs = require('fs'),
-  path = require('path')
+  path = require('path'),
+  EventEmitter = require('events')
 
-class  Bootstrap {
+class  Minimi extends EventEmitter {
 
   /**
-   * Bootstraps e new service instance.
+   * Bootstraps a new service instance.
    */
   constructor(){
+    super()
     process.chdir(path.normalize(__dirname))
+
     this.config = require('./config.json')
-    this.app = express()
+    this.router = express()
     this.adaptors = {}
+
     this.loadSchemas()
+    this.emit('strapping')
     this.start()
+    this.emit('strapped')
   }
 
   /**
@@ -29,21 +35,25 @@ class  Bootstrap {
    */
   loadSchemas(){
     var thisObject = this
-    fs.readdir(
-      'schemata',
+
+    fs.readdir('schemata',
+
       (err, files) => {
         if (err) throw new Error(err)
+
         for(var i in files){
-          var 
+
+          var
             name = path.basename(files[i], '.json'),
             Adaptor = thisObject.config.schemata[name]
               ? require('./adaptors/' + thisObject.config.schemata[name].adaptor)
               : require('./adaptors/RESTAdaptor')
-          thisObject.create(
+
+          thisObject.connect(
             Adaptor,
-            name, 
+            name,
             require('./schemata/' + files[i])
-          )          
+          )
         }
       }
     )
@@ -55,23 +65,34 @@ class  Bootstrap {
    * @param  string schema name
    * @param  object schema object
    */
-  create(Adaptor, name, schema) {
+  connect(Adaptor, name, schema) {
+    this.emit('connecting', this, Adaptor, name, schema)
+
     this.adaptors[name] = new Adaptor(
       this,
       name,
       schema
     )
+
+    this.emit('connected', this, this.adaptors[name], name, schema)
   }
 
   /**
    * Start the service
    */
   start(){
-    this.app.listen(
-      this.config.port, 
-      () => { console.log('minimi on ' + this.config.port) }
+    this.emit('starting', this)
+
+    this.router.listen(
+      this.config.port,
+
+      () => {
+        console.log('minimi responding on ' + this.config.port)
+      }
     )
+
+    this.emit('started', this)
   }
 }
 
-new Bootstrap()
+module.exports = new Minimi()

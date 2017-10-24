@@ -1,13 +1,15 @@
 {
-  "name": "mINImi",
+  "name": "minimi",
   "description": "",
   "version": "0.0.0",
   "main": "bootstrap.js",
+  "license": "GPL-3.0",
+
   "repository": {
     "type": "git",
     "url": "https://github.com/scheepers/TMI.git"
   },
-  "license": "GPL-3.0",
+
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.2",

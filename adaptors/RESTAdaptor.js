@@ -1,59 +1,74 @@
 /**
- * @file RESTAdaptor.js
- * Contains main service implementation.
+ * @file RestAdaptor.js
+ * Restful service adaptor.
  */
 
 "use strict";
 
-const 
-  jsonSchemaForm = require('json-schema-form-js'),
-  bodyParser = require('body-parser')
+const
+  bodyParser = require('body-parser'),
+  parseQuery = bodyParser.urlencoded({ extended: false }),
+  parseBody = bodyParser.json()
 
-class RESTAdaptor {
+class RestAdaptor {
 
   /**
-   * Constructs a new RESTAdaptor
-   * @param  object bootstrap [description]
+   * Constructs a new RestAdaptor
+   * @param  object minimi [description]
    * @param  string name      [description]
    * @param  object schema    [description]
    */
-  constructor(bootstrap, name, schema){
-    this.bootstrap = bootstrap,
-    this.config = bootstrap.config.schemata[name],
-    this.name = name,
+  constructor(minimi, name, schema){
+    this.minimi = minimi
+    this.name = name
     this.schema = schema
+    this.config = minimi.config.schemata[name]
+    this.attachMethods(minimi)
+  }
+
+  /**
+   * Attach request method responders
+   */
+  attachMethods(){
     var
       thisObject = this,
-      defaultMethods = ['get', 'post', 'put', 'delete', 'patch'],
-      defaultMiddleWare = {
-        'get': bodyParser.urlencoded({ extended: false }),
-        'post': bodyParser.json()
-      },
-      methods = this.config
-        ? this.config.methods || defaultMethods
-        : defaultMethods
-    for (var method in defaultMethods){
-      if (methods[method]){
+      methods = this.methods()
+    for (var method in methods){
+      if (this[method]){
         (
           (method) => {
-            if (defaultMiddleWare[method]) {
-              bootstrap.app[method](
-                '/' + name,
-                defaultMiddleWare[method]
+            for (var i in methods[method]){
+              this.minimi.router[method](
+                '/' + thisObject.name,
+                methods[method][i]
               )
             }
-            bootstrap.app[method](
-              '/' + name,
+            this.minimi.router[method](
+              '/' + this.name,
               (request, response) => {
                 let result
                 if (result = thisObject[method](request, response)){
                   response.send(result)
                 }
               }
-            )          
+            )
           }
-        )(methods[method])
+        )(method)
       }
+    }
+  }
+
+  /**
+   * Declare methods to respond to and middleware to apply to each
+   * @return object [description]
+   */
+  methods(){
+    return {
+      'get': [parseQuery],
+      'post': [parseBody],
+      'put': [parseBody],
+      'delete': [parseQuery],
+      'patch': [parseQuery, parseBody]
     }
   }
 
@@ -62,8 +77,9 @@ class RESTAdaptor {
    * @param  object request  Express request object
    * @param  object response Express response object
    */
-  get(request, response) { 
-    return JSON.stringify(request.query) 
+  get(request, response) {
+    this.minimi.emit('get', request.query)
+    return JSON.stringify(request.query)
   }
 
   /**
@@ -71,7 +87,8 @@ class RESTAdaptor {
    * @param  object request  Express request object
    * @param  object response Express response object
    */
-  post(request, response) { 
+  post(request, response) {
+    this.minimi.emit('post', request.query)
     return JSON.stringify(request.body)
   }
 
@@ -81,7 +98,8 @@ class RESTAdaptor {
    * @param  object response Express response object
    */
   put(request, response) {
-    return 'TODO' 
+    this.minimi.emit('put', request.query)
+    return JSON.stringify(request.body)
   }
 
   /**
@@ -89,8 +107,9 @@ class RESTAdaptor {
    * @param  object request  Express request object
    * @param  object response Express response object
    */
-  delete(request, response) { 
-    return 'TODO' 
+  delete(request, response) {
+    this.minimi.emit('delete', request.query)
+    return JSON.stringify(request.query)
   }
 
   /**
@@ -98,10 +117,11 @@ class RESTAdaptor {
    * @param  object request  Express request object
    * @param  object response Express response object
    */
-  patch(request, response) { 
-    return 'TODO' 
+  patch(request, response) {
+    this.minimi.emit('patch', request.query)
+    return JSON.stringify([request.query, request.body])
   }
 
 }
 
-module.exports = RESTAdaptor
+module.exports = RestAdaptor
