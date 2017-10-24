@@ -19,7 +19,7 @@ npm install
 ## Configure
 
 minimi exposes a microservice per JSON schema in the [schema folder](./schema) using [wrappers](./wrappers).
-You may change this behavior by specifying different Wrappers and controllers within [config.json](./config.json).
+You may change this behavior by assigning Wrappers to schemata in [config.json](./config.json).
 
 ```
 {
@@ -31,8 +31,6 @@ You may change this behavior by specifying different Wrappers and controllers wi
 
 		"schema-name": {
 			"wrapper": "MySchemaWrapper",
-			"host": "hostname",
-			"port": 27017
 		}
 
 	}
