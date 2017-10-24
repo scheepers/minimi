@@ -90,9 +90,9 @@ Instances of user objects may be persisted, retrieved, updated and deleted withi
 
 Visit:
 ```
-http://localhost:3000/user
+http://localhost:3000/schema-name
 ```
-to view a form generated from the schema.
+to view an HTML form generated using [json-schema-form-js](https://www.npmjs.com/package/json-schema-form-js) based on the schema.
 
 TODO: Add validation
 
