@@ -15,12 +15,18 @@
 "use strict";
 
 const
-  jsonSchemaForm = require('json-schema-form-js'),
   RestWrapper = require('./RestWrapper'),
   MongoClient = require('mongodb').MongoClient,
-  assert = require('assert');
+  assert = require('assert')
 
 class MongoWrapper extends RestWrapper{
+
+  /**
+   * @inherit
+   */
+  constructor(minimi, name, schema){
+    super(minimi, name, schema)
+  }
 
   /**
    * Connects to Mongodb and executes a callback with reference to the db
@@ -31,7 +37,6 @@ class MongoWrapper extends RestWrapper{
       'mongodb://' + this.config.host + ':' + this.config.port,
       (err, db) => {
         if (err) throw new Error(err)
-
         callback(db)
       }
     )
@@ -42,16 +47,13 @@ class MongoWrapper extends RestWrapper{
    */
   get(request, response){
     var thisObject = this
-
-    if (request.query.length)
+    if (request.query && Object.keys(request.query).length)
       this.connect(
-
         (db) => {
           db.collection(thisObject.name).find(request.query).toArray(
-
             (err, docs) => {
+              console.log('Responding to ' + JSON.stringify(request.query))
               if (err) throw new Error(err)
-
               response.send(docs)
               db.close()
               console.log('Responded to ' + JSON.stringify(request.query) + ' with ' + docs.length + ' documents')
@@ -59,7 +61,7 @@ class MongoWrapper extends RestWrapper{
           )
         }
       )
-    else return jsonSchemaForm.render(this.schema)
+    else return super.get(request, response)
   }
 
   /**
@@ -70,7 +72,7 @@ class MongoWrapper extends RestWrapper{
     this.connect(
       (db) => {
         db.collection(thisObject.name).insertMany(
-          request.body,
+          [request.body],
           (err, result) => {
             if (err) throw new Error(err)
             response.send(result.ops)

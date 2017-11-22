@@ -1,6 +1,6 @@
 {
 
-	"name": "example",
+	"name": "tmi",
 	"port": 3000,
 
 	"schema": {

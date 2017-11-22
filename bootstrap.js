@@ -44,17 +44,19 @@ class  Minimi extends EventEmitter {
         for(var i in files){
 
           var
-            name = path.basename(files[i], '.json'),
-            Wrapper = thisObject.config.schema[name]
-              ? require('./wrappers/' + thisObject.config.schema[name].wrapper)
-              : require('./wrappers/RESTWrapper')
+            schemaName = path.basename(files[i], '.json'),
+            wrapperName = thisObject.config.schema[schemaName] ? thisObject.config.schema[schemaName].wrapper : false || 'RestWrapper',
+            Wrapper = require('./wrappers/' + wrapperName)
 
+          console.log('Connecting ' + schemaName + ' to ' + wrapperName)
           thisObject.connect(
             Wrapper,
-            name,
+            schemaName,
             require('./schema/' + files[i])
           )
         }
+
+        console.log('Schemata online')
       }
     )
   }

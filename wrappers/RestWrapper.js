@@ -7,6 +7,7 @@
 
 const
   bodyParser = require('body-parser'),
+  jsonSchemaForm = require('json-schema-form-js'),
   parseQuery = bodyParser.urlencoded({ extended: false }),
   parseBody = bodyParser.json()
 
@@ -24,22 +25,27 @@ class RestWrapper {
     this.schema = schema
     this.config = minimi.config.schema[name]
 
-    this.attachMethods(minimi)
+    this.attach(minimi)
   }
 
   /**
    * Attach request method responders
    */
-  attachMethods(){
+  attach(){
     var
       thisObject = this,
       methods = this.methods()
+
+    console.log('Wrapping ' + thisObject.name + ', exposing:')
 
     for (var method in methods){
       if (this[method]){
         (
 
           (method) => {
+
+            console.log('  ' + method.toUpperCase())
+
             for (var i in methods[method]){
               this.minimi.router[method](
                 '/' + thisObject.name,
@@ -84,7 +90,12 @@ class RestWrapper {
    * @param  object response Express response object
    */
   get(request, response) {
-    return JSON.stringify(request.query)
+    switch(request.header('Accept')){
+      case 'text/html': return jsonSchemaForm.render(this.schema)
+      case 'json/schema': return this.schema
+      case 'application/json': return JSON.stringify([])
+      default: return JSON.stringify(request.query)
+    }
   }
 
   /**
@@ -93,6 +104,7 @@ class RestWrapper {
    * @param  object response Express response object
    */
   post(request, response) {
+    console.log(request.body)
     return JSON.stringify(request.body)
   }
 

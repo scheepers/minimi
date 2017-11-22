@@ -1,7 +1,12 @@
 {
-  "type": "user",
+  "type": "object",
   "title": "User",
   "properties": {
+    "uid":  {
+      "title": "User ID",
+      "type": "number",
+      "description": "Unique index of this user."
+    },
     "handle":  {
       "title": "Handle",
       "type": "string",

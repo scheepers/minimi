@@ -1,11 +1,11 @@
 /**
- * @file UserAdaptor.js
- * MongoDB service adaptor
+ * @file UserWrapper.js
+ * MongoDB service wrapper
  *
  * Requires host and port attributes to be set schemata section of config.json:
  *
  * "user": {
- *   "adaptor": "UserAdaptor",
+ *   "wrapper": "UserWrapper",
  *   "host": "localhost",
  *   "port": 27017
  * }
@@ -15,9 +15,9 @@
 "use strict";
 
 const
-  MongoAdaptor = require('./MongoAdaptor')
+  MongoWrapper = require('./MongoWrapper')
 
-class UserAdaptor extends MongoAdaptor{
+class UserWrapper extends MongoWrapper{
 
   /**
    * @inherit
@@ -28,4 +28,4 @@ class UserAdaptor extends MongoAdaptor{
 
 }
 
-module.exports = UserAdaptor
+module.exports = UserWrapper
