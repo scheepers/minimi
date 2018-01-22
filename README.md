@@ -1,6 +1,6 @@
 # minimi
 
-minimal microservice implementation
+minimal microminion implementation
 
 
 ## System requirements
@@ -18,9 +18,8 @@ npm install
 
 ## Configure
 
-minimi exposes a microservice per JSON schema in the [schema folder](./schema) using [wrappers](./wrappers).
-By default schemas are exposed using the [RestWrapper](./wrappers/RestWrapper).
-You may change this behavior by assigning Wrappers to schemata in [config.json](./config.json).
+minimi exposes a microminion per JSON schema declared in
+[config.json](./config.json).
 
 ```
 {
@@ -31,7 +30,7 @@ You may change this behavior by assigning Wrappers to schemata in [config.json](
 	"schema": {
 
 		"schema-name": {
-			"wrapper": "MySchemaWrapper",
+			"Minion": "MySchemaMinion",
 		}
 
 	}
@@ -56,32 +55,32 @@ http://localhost:3000/schema-name
 ```
 
 Requests are responded to in the following manner:
-* GET Accept=text/json - an array [JSON].
 * GET Accept=json/schema - schema [JSON].
-* GET Accept=text/html - form body [HTML].
+* GET Accept=application/json - request url parameters [JSON].
+* GET Accept=[everything else] - form body [HTML].
 * DELETE - request url parameters [JSON].
 * POST and PUT - request body as [JSON].
 * PATCH - both request url parameters and body [JSON].
 
 Apart from testing HTTP requests, this is not particularly useful in itself.
 
-The idea is to extend the JsonWrapper into more interesting wrappers, as per the
-[MongoWrapper](./wrappers/MongoWrapper.js) that stores records in a MongoDB:
-* GET Accept=text/json - an array of all stored records [JSON].
-* GET Accept=json/schema - schema as [JSON].
-* GET Accept=text/html - form body [HTML].
+The idea is to extend the JsonMinion into more interesting Minions, as per the
+[MongoMinion](./minions/MongoMinion.js) that stashs entities in a MongoDB:
+* GET Accept=json/schema - schema as [JSON]. Inherited.
+* GET Accept=application/json - an array of all stashd entities [JSON].
+* GET Accept=[everything else] - form body [HTML]. Inherited.
 * DELETE - removes an entity that matches the url parameters.
-* POST - creates a new record represented by the request body.
-* PUT - overwrites a record matching the request url paramters with the record
+* POST - creates a new entity represented by the request body.
+* PUT - overwrites a entity matching the request url paramters with the entity
   represented by the request body.
-* PATCH - .
+* PATCH - updates fields within.
 
 ## Extend
 
-[MongoWrapper](./wrappers/MongoWrapper.js) is an example of extending the
-[RestWrapper](./wrappers/RestWrapper.js).
+[MongoMinion](./minions/MongoMinion.js) is an example of extending the
+[RestMinion](./minions/RestMinion.js).
 
-With a local MongoDB service running and an example
+With a local MongoDB minion running and an example
 [config.json](./config.json):
 ```
 {
@@ -92,7 +91,7 @@ With a local MongoDB service running and an example
 	"schema": {
 
 		"user": {
-			"wrapper": "MongoWrapper",
+			"Minion": "MongoMinion",
 			"host": "localhost",
 			"port": 27017
 		}
@@ -102,7 +101,7 @@ With a local MongoDB service running and an example
 }
 ```
 
-User records may be persisted, retrieved, updated and deleted within a store
+User entities may be persisted, retrieved, updated and deleted within a stash
 with the same name as the schema.
 
 Visit:

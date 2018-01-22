@@ -1,16 +1,15 @@
 {
-
-	"name": "tmi",
+	"name": "minimi",
 	"port": 3000,
 
-	"schema": {
+	"minions": {
 
-		"user": {
-			"wrapper": "MongoWrapper",
-			"host": "localhost",
-			"port": 27017
+		"Users": {
+			"schema": "user"
+		},
+
+		"Sessions": {
+			"schema": "session"
 		}
-
 	}
-
 }

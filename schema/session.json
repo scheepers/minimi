@@ -8,5 +8,5 @@
       "description": "Unique Identifier of the user."
     }
   },
-  "required": ["id"]
+  "required": ["uid"]
 }
