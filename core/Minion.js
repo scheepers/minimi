@@ -32,17 +32,17 @@ module.exports = class Minion {
         : 'Stash',
       path = config.path || config.schema
 
+    this.service = this.find('services', service)
+    this.stash = this.find('stashes', stash)
+    this.schema = require('../schema/' + config.schema)
+
     console.log(
-      'Minion [' + name + '] reporting for duty\n  ' +
+      name + ' minion reporting for duty\n  ' +
       'Stash:   ' + stash + '\n  ' +
       'Schema:  ' + config.schema + '\n  ' +
       'Service: ' + service + '\n  ' +
-      'Path: ' + path + '\n'
+      'Path:    ' + path + '\n'
     )
-
-    this.service = new (require('./' + service))(this)
-    this.stash = new (require('./' + stash))(this)
-    this.schema = require('../schema/' + config.schema)
   }
 
 
@@ -59,6 +59,30 @@ module.exports = class Minion {
 
   // ----- Utility -----
 
+
+  /**
+   * Locates and instantiates a Service or Stash
+   * @param  {string} type   services|stashes
+   * @param  {string} name   object classname
+   */
+  find(type, name){
+
+    var locations = [
+      '../custom/' + type + '/',
+      './' + type + '/',
+      './'
+    ]
+
+    for (let i in locations){
+      try{
+        return new (require(locations[i] + name + '.js'))(this)
+      } catch (e) {
+        if (e.code != 'MODULE_NOT_FOUND') console.log(e)
+      }
+    }
+
+    throw new Error(name + ' not found in ' + type);
+  }
 
   /**
    * Dispose of the minion.

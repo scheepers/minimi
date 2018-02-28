@@ -4,12 +4,13 @@
 
 	"minions": {
 
-		"Users": {
-			"schema": "user"
+		"User": {
+			"schema": "user",
+			"stash": "CacheStash"
 		},
 
-		"Sessions": {
-			"schema": "session"
+		"Collective": {
+			"schema": "collective"
 		}
 	}
 }

@@ -6,7 +6,11 @@
 "use strict";
 
 
-class CacheStash {
+const
+  Stash = require('../Stash')
+
+
+module.exports = class CacheStash extends Stash{
 
   /**
    * Creates a new data stash
@@ -35,13 +39,25 @@ class CacheStash {
    * @inherit
    */
   read(criteria){
-    return []
+    return this.cache.filter(
+      (element) => {
+        return this.matches(element, criteria)
+      }
+    )
   }
 
   /**
    * @inherit
    */
   update(criteria, entity){
+
+    var
+      toUpdate = this.read(criteria)
+
+    for(let i in toUpdate){
+      toUpdate[i] = Object.assign(toUpdate[i], entity)
+    }
+
     return []
   }
 
@@ -50,5 +66,22 @@ class CacheStash {
    */
   delete(criteria){
     return []
+  }
+
+
+  // ----- Utility methods -----
+
+
+  /**
+   * [matches description]
+   * @param  {[type]} element  [description]
+   * @param  {[type]} criteria [description]
+   * @return {[type]}          [description]
+   */
+  matches(element, criteria){
+    for(let property in criteria){
+      if (element[property] != criteria[property]) return false
+    }
+    return true
   }
 }

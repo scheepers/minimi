@@ -1,31 +1,34 @@
 /**
- * @file MongoWrapper.js
- * MongoDB service wrapper
+ * @file MongoService.js
+ * MongoDB minion minion
  *
  * Requires host and port attributes to be set schema section of config.json:
  *
  * "mongo-example": {
- *   "wrapper": "MongoWrapper",
+ *   "minion": "MongoService",
  *   "host": "localhost",
  *   "port": 27017
  * }
  *
  */
 
+
 "use strict";
 
+
 const
-  RestWrapper = require('./RestWrapper'),
+  Service = require('../Service'),
   MongoClient = require('mongodb').MongoClient,
   assert = require('assert')
 
-class MongoWrapper extends RestWrapper{
+
+module.exports = class MongoService extends Service{
 
   /**
    * @inherit
    */
-  constructor(minimi, name, schema){
-    super(minimi, name, schema)
+  constructor(minimi, path, name, schema){
+    super(minimi, path, name, schema)
   }
 
   /**
@@ -34,9 +37,9 @@ class MongoWrapper extends RestWrapper{
    */
   connect(callback){
     MongoClient.connect(
-      'mongodb://' + this.config.host + ':' + this.config.port,
-      (err, db) => {
-        if (err) throw new Error(err)
+      'mongodb://' + this.config.host + ':' + this.config.port + '/' + this.minimi.config.name,
+      (error, db) => {
+        if (error) throw new Error(error)
         callback(db)
       }
     )
@@ -47,16 +50,14 @@ class MongoWrapper extends RestWrapper{
    */
   get(request, response){
     var thisObject = this
-    if (request.query && Object.keys(request.query).length)
+    if (request.header('Accept') == 'application/json')
       this.connect(
         (db) => {
           db.collection(thisObject.name).find(request.query).toArray(
-            (err, docs) => {
-              console.log('Responding to ' + JSON.stringify(request.query))
-              if (err) throw new Error(err)
+            (error, docs) => {
+              if (error) throw new Error(error)
               response.send(docs)
               db.close()
-              console.log('Responded to ' + JSON.stringify(request.query) + ' with ' + docs.length + ' documents')
             }
           )
         }
@@ -73,8 +74,8 @@ class MongoWrapper extends RestWrapper{
       (db) => {
         db.collection(thisObject.name).insertMany(
           [request.body],
-          (err, result) => {
-            if (err) throw new Error(err)
+          (error, result) => {
+            if (error) throw new Error(error)
             response.send(result.ops)
             db.close()
           }
@@ -93,8 +94,8 @@ class MongoWrapper extends RestWrapper{
         db.collection(thisObject.name).updateOne(
           request.query,
           {$set: request.body},
-          (err, result) => {
-            if (err) throw new Error(err)
+          (error, result) => {
+            if (error) throw new Error(error)
             response.send(result.ops)
             db.close()
           }
@@ -112,8 +113,8 @@ class MongoWrapper extends RestWrapper{
       (db) => {
         db.collection(thisObject.name).deleteOne(
           request.query,
-          (err, result) => {
-            if (err) throw new Error(err)
+          (error, result) => {
+            if (error) throw new Error(error)
             response.send(result.result.n)
             db.close()
           }
@@ -126,9 +127,9 @@ class MongoWrapper extends RestWrapper{
    * @inheritDoc
    */
   patch(request, response){
-    this.put(request, response)
+    // TODO: write patching
   }
 
 }
 
-module.exports = MongoWrapper
+module.exports = MongoService

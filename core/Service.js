@@ -97,7 +97,7 @@ module.exports = class Service {
    */
   get(request, response) {
     switch(request.header('Accept')){
-      case 'json/schema': return this.minion.getConfig().schema
+      case 'application/json;schema': return this.minion.schema
       case 'application/json': return JSON.stringify(request.query)
       default: return jsonSchemaForm.render(this.minion.schema)
     }

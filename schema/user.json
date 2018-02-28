@@ -2,7 +2,7 @@
   "type": "object",
   "title": "User",
   "properties": {
-    "uid":  {
+    "userId":  {
       "title": "User ID",
       "type": "number",
       "description": "Unique index of this user.",
