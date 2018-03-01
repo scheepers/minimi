@@ -3,7 +3,7 @@
  * Contains minion bootstrapping code.
  */
 
-"use strict";
+"use strict"
 
 
 const
@@ -30,12 +30,14 @@ class Minimi extends EventEmitter {
     this.start()
   }
 
+
+  // ----- Main -----
+
+
   /**
    * Initialises minimi.
    */
   init(){
-
-    process.chdir(path.normalize(__dirname))
 
     this.config = require('./config.json')
     this.app = express()
@@ -46,9 +48,18 @@ class Minimi extends EventEmitter {
     this.app.use(this.handleError)
     this.app.use(this.handleNotFound)
 
+    process.chdir(path.normalize(__dirname))
+    process.on(
+      'SIGINT', 
+      () => {
+        this.stop()
+        process.exit()
+      }
+    )
+
     console.log(
       'minimi [' +
-      this.config.name + '] taking care of http://127.0.0.1:' +
+      this.config.name + '] seizing http://127.0.0.1:' +
       this.config.port +
       '\n'
     )
@@ -58,10 +69,48 @@ class Minimi extends EventEmitter {
    * Loads all minions defined in config.json
    */
   load(){
-    for(var name in this.config.minions){
+    for(let name in this.config.minions){
       this.delegate(name, this.config.minions[name])
     }
   }
+
+
+  // ----- Service control -----
+
+
+  /**
+   * Start the service.
+   */
+  start(){
+    this.app.listen(
+      this.config.port,
+      () => {
+        console.log('minimi [' + this.config.name + '] ready.\n')
+      }
+    )
+  }
+
+  /**
+   * Stop the service.
+   */
+  stop(){
+
+    console.log(' kill command received!\n');
+
+    for (let name in this.minions){
+      process.stdout.write('Retiring ' + name + ' minion... ');
+      this.minions[name].dispose()
+      console.log('done.');
+    }
+
+    console.log(
+      '\nminimi [' + this.config.name + '] done.\n'
+    )
+  }
+
+
+  // ----- Utility -----
+
 
   /**
    * Delegate a minion as per the provided configuration
@@ -70,14 +119,15 @@ class Minimi extends EventEmitter {
    */
   delegate(name, config){
 
-    if (this.minions[name]) this.minions[name].destroy()
+    if (this.minions[name]) this.minions[name].dispose()
     if (config) this.config.minions[name] = config
 
-    this.minions[name] = new Minion(
-      name,
-      this
-    )
+    this.minions[name] = new Minion(name, this)
   }
+
+
+  // ----- Error handling -----
+
 
   /**
    * Handle errors
@@ -98,18 +148,6 @@ class Minimi extends EventEmitter {
    */
   handleNotFound(request, response){
     response.status(404).json({"error": 'Not found!'})
-  }
-
-  /**
-   * Start the service.
-   */
-  start(){
-    this.app.listen(
-      this.config.port,
-      () => {
-        console.log('\nminimi [' + this.config.name + '] online\n')
-      }
-    )
   }
 }
 

@@ -3,17 +3,17 @@
  * Basic Memory Stash.
  */
 
-"use strict";
+"use strict"
 
 
 const
   Stash = require('../Stash')
 
 
-module.exports = class CacheStash extends Stash{
+module.exports = class CacheStash extends Stash {
 
   /**
-   * Creates a new data stash
+   * Creates a new memory based data stash
    * @param  {string} name   [description]
    * @param  {object} config [description]
    * @param  object minimi main boot strap
@@ -58,7 +58,7 @@ module.exports = class CacheStash extends Stash{
       toUpdate[i] = Object.assign(toUpdate[i], entity)
     }
 
-    return []
+    return toUpdate
   }
 
   /**

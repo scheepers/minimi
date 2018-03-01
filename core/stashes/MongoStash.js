@@ -12,8 +12,7 @@
  *
  */
 
-
-"use strict";
+"use strict"
 
 
 const

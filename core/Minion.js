@@ -3,7 +3,7 @@
  * Basic configurable object.
  */
 
-"use strict";
+"use strict"
 
 
 module.exports = class Minion {
@@ -37,7 +37,7 @@ module.exports = class Minion {
     this.schema = require('../schema/' + config.schema)
 
     console.log(
-      name + ' minion reporting for duty\n  ' +
+      'Spawning ' + name + ' minion\n  ' +
       'Stash:   ' + stash + '\n  ' +
       'Schema:  ' + config.schema + '\n  ' +
       'Service: ' + service + '\n  ' +
@@ -67,28 +67,33 @@ module.exports = class Minion {
    */
   find(type, name){
 
-    var locations = [
-      '../custom/' + type + '/',
-      './' + type + '/',
-      './'
-    ]
+    var 
+      locations = [
+        '../custom/' + type + '/',
+        './' + type + '/',
+        './'
+      ],
+      found = false,
+      error = false
 
     for (let i in locations){
       try{
-        return new (require(locations[i] + name + '.js'))(this)
+        found = new (require(locations[i] + name + '.js'))(this)
       } catch (e) {
-        if (e.code != 'MODULE_NOT_FOUND') console.log(e)
+        if (e.code != 'MODULE_NOT_FOUND') error = e
       }
     }
 
-    throw new Error(name + ' not found in ' + type);
+    if (error) throw error
+    if (found) return found
+    else throw new Error(name + ' not found in ' + type)
   }
 
   /**
    * Dispose of the minion.
    */
   dispose(){
-    this.service.stop()
+    this.service.detach()
     this.stash.close()
   }
 }

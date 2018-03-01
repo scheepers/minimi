@@ -3,7 +3,7 @@
  * Basic Data Stash.
  */
 
-"use strict";
+"use strict"
 
 
 module.exports = class Stash {

@@ -5,11 +5,10 @@
 	"minions": {
 
 		"User": {
-			"schema": "user",
-			"stash": "CacheStash"
+			"schema": "user"
 		},
 
-		"Collective": {
+		"Collective":{
 			"schema": "collective"
 		}
 	}

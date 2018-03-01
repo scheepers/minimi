@@ -18,6 +18,12 @@
       "enum": ["draft", "active", "retired"]
     },
 
+    "revision": {
+      "type": "number"
+    },
+
+    "created": "",
+
     "profiles": {
       "title": "Collective profiles",
       "type": "array",

@@ -3,7 +3,7 @@
  * Basic configurable object.
  */
 
-"use strict";
+"use strict"
 
 
 const
@@ -11,7 +11,7 @@ const
   bodyParser = require('body-parser'),
   parseBody = bodyParser.json(),
   parseQuery = bodyParser.urlencoded({ extended: false }),
-  removeRoute = require('express-remove-route')
+  logRequest = (request, response) => { console.log('Processing: ' + request.url) }
 
 
 module.exports = class Service {
@@ -26,13 +26,17 @@ module.exports = class Service {
   }
 
   /**
-   * Releases all path handlers.
+   * Declare methods to respond to and middleware to apply to each
+   * @return object middleware mapping keyed by method
    */
-  stop(){
-    removeRoute(
-      this.minion.minimi.router,
-      this.minion.getConfig().path || this.minion.getConfig().schema
-    )
+  methods(){
+    return {
+      'get': [parseQuery],
+      'post': [parseBody],
+      'put': [parseBody],
+      'delete': [parseQuery],
+      'patch': [parseQuery, parseBody]
+    }
   }
 
 
@@ -52,7 +56,7 @@ module.exports = class Service {
     for (let method in methods){
       if (this[method]){
 
-        for (var middleware in methods[method]){
+        for (let middleware in methods[method]){
           this.minion.minimi.router[method](
             '/' + path,
             methods[method][middleware]
@@ -73,16 +77,22 @@ module.exports = class Service {
   }
 
   /**
-   * Declare methods to respond to and middleware to apply to each
-   * @return object middleware mapping keyed by method
+   * Releases all path handlers.
    */
-  methods(){
-    return {
-      'get': [parseQuery],
-      'post': [parseBody],
-      'put': [parseBody],
-      'delete': [parseQuery],
-      'patch': [parseQuery, parseBody]
+  detach(){
+
+    var
+      routes = this.minion.minimi.router.stack,
+      path = '/' + (this.minion.getConfig().path || this.minion.getConfig().schema),
+      keys = Object.keys(routes).reverse()
+
+    for(var i in keys){
+      if(routes[keys[i]].route.path == path){
+        routes.splice(
+          keys[i],
+          1
+        )
+      }
     }
   }
 
