@@ -1,20 +1,19 @@
 {
-  "name": "minimi",
-  "description": "",
+  "name": "tmi-core",
+  "description": "Tribe Mobilisation Infrastructure - Core",
   "version": "0.0.0",
-  "main": "minimi.js",
-  "license": "GPL-3.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/scheepers/TMI.git"
-  },
+  "license": "MIT",
+  "main": "bootstrap.js",
   "dependencies": {
-    "body-parser": "^1.18.2",
+    "ajv": "^6.5.2",
+    "ajv-errors": "^1.0.0",
+    "body-parser": "^1.18.3",
     "express": "^4.16.2",
     "express-body-parser-json-error": "^0.1.0",
-    "jquery": "^3.0.0",
-    "json-schema-form-js": "0.0.2",
-    "jsonschema": "^1.2.2",
-    "mongodb": "^2.2.33"
+    "express-session": "^1.15.6",
+    "npm": "^5.10.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "password-hash": "^1.2.2"
   }
 }

@@ -1,51 +1,23 @@
-# minimi
 
-minimal microservices
-
-
-## System requirements
-
-1. NodeJS
+# MiniMi
 
 
-## Install
-
-In the root of minimi, run:
-```
-npm install
-```
+MiniMi is designed to spin up **Mini**mal **Mi**croservices quickly and easily
+within a monolythic model by using minimal configuration and intuitive
+structural convention to enable simple phased processing of requests and
+pluggable state management.
 
 
-## Configure
+## Index
 
-minimi exposes a microservice per minion declared in
-[config.json](./config.json).
-
-```
-{
-	"name": "minimi",
-	"port": 3000,
-
-	"minions": {
-
-		"Example": {
-			"service": "ExampleServiceName"
-			"stash":   "ExampleStashName",
-			"schema":  "ExampleSchemaName",
-		}
-
-	}
-}
-```
+* [Overview](docs/OVERVIEW.md)
+* [Tutorial](docs/TUTORIAL.md)
+* [Howtos](docs/HOWTO.md)
+* [Reference](docs/REFERENCE.md)
 
 
-## Extend
+## Suggested reading
 
-TODO
-
-## Start
-
-From the folder containing minimi, run:
-```
-node minimi
-```
+* [Node.JS](https://nodejs.org/en/)
+* [Node Express](http://expressjs.com/)
+* [JSON Schema](https://json-schema.org/)

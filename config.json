@@ -1,15 +1,5 @@
 {
-	"name": "minimi",
+	"name": "mimo",
 	"port": 3000,
-
-	"minions": {
-
-		"User": {
-			"schema": "user"
-		},
-
-		"Collective":{
-			"schema": "collective"
-		}
-	}
+	"whitelist": ["http://localhost"]
 }
